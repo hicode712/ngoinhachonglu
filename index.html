@@ -328,7 +328,6 @@
             cursor: zoom-in;
         }
 
-        /* Ẩn ảnh lỗi và hiện khung hướng dẫn khi src="" đang để trống */
         .product-img[src=""] {
             display: none;
         }
@@ -370,164 +369,527 @@
             color: var(--text-muted);
         }
 
-        /* 4. BỘ MÔ PHỎNG MỰC NƯỚC TRỰC QUAN (UPGRADED SIMULATOR) */
+        /* =================================================================
+           4. BỘ MÔ PHỎNG THỦY LỰC & LỰC ĐẨY ÁC-SI-MÉT (PHIÊN BẢN NÂNG CẤP)
+           ================================================================= */
         .sim-container {
             background: var(--bg-surface);
             border: 2px solid var(--border-strong);
             box-shadow: var(--shadow-hard);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 24px;
-            margin-bottom: 32px;
+            margin-bottom: 36px;
             display: grid;
-            grid-template-columns: 1fr 1.3fr;
-            gap: 24px;
-            align-items: center;
+            grid-template-columns: 1.1fr 1.25fr;
+            gap: 28px;
+            align-items: stretch;
         }
 
-        @media (max-width: 780px) {
+        @media (max-width: 860px) {
             .sim-container {
                 grid-template-columns: 1fr;
             }
         }
 
-        /* Hồ nước mô phỏng bằng CSS */
+        /* Bể mô phỏng trực quan */
         .sim-tank {
-            height: 230px;
+            min-height: 330px;
             border: 2px solid var(--border-strong);
-            border-radius: 8px;
-            background: linear-gradient(to bottom, #e0f2fe 0%, #f0f9ff 100%);
+            border-radius: 10px;
+            background: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 60%, #f0f9ff 100%);
             position: relative;
             overflow: hidden;
             display: flex;
             justify-content: center;
+            transition: background 0.5s ease;
+            user-select: none;
+        }
+
+        /* Bầu trời chuyển tối khi mưa bão / lũ lớn */
+        .sim-tank.stormy {
+            background: linear-gradient(180deg, #1e293b 0%, #334155 55%, #475569 100%);
         }
 
         body.blueprint-mode .sim-tank {
-            background: linear-gradient(to bottom, #0f172a 0%, #1e293b 100%);
+            background: linear-gradient(180deg, #0b1120 0%, #1e293b 100%);
         }
 
-        .sim-water {
+        /* Nhãn trạng thái góc trên bể */
+        .tank-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 8;
+            background: rgba(15, 23, 42, 0.78);
+            color: #fff;
+            font-family: monospace;
+            font-size: 0.76rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+
+        /* Thước đo mực nước bên trái bể */
+        .tank-ruler {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 18px;
+            width: 42px;
+            background: rgba(255, 255, 255, 0.65);
+            border-right: 1.5px solid rgba(0, 0, 0, 0.2);
+            z-index: 7;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 14px 4px 6px 6px;
+            font-family: monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .ruler-mark {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .ruler-mark::after {
+            content: "";
+            flex: 1;
+            height: 1.5px;
+            background: #334155;
+        }
+
+        /* Hiệu ứng hạt mưa rơi */
+        .rain-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 6;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            background-image: repeating-linear-gradient(
+                -15deg,
+                transparent 0px,
+                transparent 18px,
+                rgba(255, 255, 255, 0.55) 18px,
+                rgba(255, 255, 255, 0.55) 20px
+            );
+            background-size: 100px 80px;
+            animation: rainFall 0.45s linear infinite;
+        }
+
+        .sim-tank.raining .rain-layer {
+            opacity: 0.65;
+        }
+
+        @keyframes rainFall {
+            from { background-position: 0 0; }
+            to { background-position: -22px 80px; }
+        }
+
+        /* Nền đất đáy bể */
+        .sim-ground {
             position: absolute;
             bottom: 0;
             left: 0;
-            width: 100%;
-            height: 12%;
-            background: rgba(2, 132, 199, 0.55);
-            border-top: 3px solid #0284c7;
-            transition: height 0.3s ease;
+            right: 0;
+            height: 18px;
+            background: repeating-linear-gradient(
+                45deg,
+                #78350f,
+                #78350f 8px,
+                #92400e 8px,
+                #92400e 16px
+            );
+            border-top: 2px solid #451a03;
+            z-index: 4;
+        }
+
+        /* Hai cọc định vị chống trôi ngang */
+        .guide-poles {
+            position: absolute;
+            bottom: 18px;
+            width: 174px;
+            height: 235px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
             z-index: 2;
         }
 
+        .guide-pole {
+            width: 4px;
+            height: 100%;
+            background: repeating-linear-gradient(
+                to bottom,
+                #64748b 0px,
+                #64748b 6px,
+                #94a3b8 6px,
+                #94a3b8 12px
+            );
+            opacity: 0.6;
+        }
+
+        /* Khối Ngôi nhà chống lũ chi tiết */
         .sim-house-wrap {
             position: absolute;
-            bottom: 12px;
-            width: 150px;
-            height: 155px;
-            transition: bottom 0.3s ease;
-            z-index: 3;
+            bottom: 18px;
+            width: 170px;
+            height: 185px;
+            transition: bottom 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 5;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* Hình vẽ ngôi nhà mini trong bộ mô phỏng */
-        .mini-roof {
-            width: 0;
-            height: 0;
-            border-left: 62px solid transparent;
-            border-right: 62px solid transparent;
-            border-bottom: 38px solid #b45309;
+        /* Hiệu ứng dập dềnh nhẹ khi nhà đang nổi */
+        .sim-house-wrap.floating {
+            animation: floatBob 2.4s ease-in-out infinite;
         }
 
+        @keyframes floatBob {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(0.7deg); }
+        }
+
+        /* Mái que gỗ xếp khít */
+        .mini-roof {
+            width: 136px;
+            height: 44px;
+            background: repeating-linear-gradient(
+                90deg,
+                #d97706 0px,
+                #d97706 8px,
+                #b45309 8px,
+                #b45309 10px
+            );
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            border-bottom: 3px solid #78350f;
+            position: relative;
+        }
+
+        /* Thân nhà bìa carton & 2 cửa sổ */
         .mini-body {
-            width: 96px;
-            height: 50px;
-            background: #e7e5e4;
-            border: 2px solid #44403c;
+            width: 104px;
+            height: 54px;
+            background: #e5e0d8;
+            border: 2.5px solid #44403c;
+            border-top: none;
             display: flex;
-            justify-content: space-around;
+            justify-content: space-evenly;
             align-items: center;
-            padding: 0 10px;
+            position: relative;
         }
 
         .mini-win {
-            width: 20px;
-            height: 20px;
-            background: #fde68a;
-            border: 2px solid #78350f;
+            width: 22px;
+            height: 22px;
+            background: #cbd5e1;
+            border: 3px solid #78350f;
+            border-radius: 2px;
+            transition: background 0.3s, box-shadow 0.3s;
         }
 
+        /* Đèn trong nhà tự bật ấm áp khi nước dâng cao */
+        .sim-tank.stormy .mini-win {
+            background: #fde047;
+            box-shadow: 0 0 10px #facc15;
+        }
+
+        /* Hàng rào lan can hành lang que gỗ */
+        .mini-railing {
+            width: 148px;
+            height: 14px;
+            border-top: 3px solid #b45309;
+            border-left: 3px solid #b45309;
+            border-right: 3px solid #b45309;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0px,
+                transparent 12px,
+                #b45309 12px,
+                #b45309 15px
+            );
+            margin-top: -12px;
+            z-index: 2;
+        }
+
+        /* Sàn nhà sàn que gỗ */
         .mini-deck {
-            width: 132px;
+            width: 154px;
             height: 10px;
             background: #d97706;
             border: 2px solid #78350f;
+            border-radius: 2px;
+            position: relative;
         }
 
+        /* Cầu thang gỗ bên hông */
+        .mini-ladder {
+            position: absolute;
+            right: -12px;
+            top: 6px;
+            width: 16px;
+            height: 52px;
+            border-left: 3px solid #92400e;
+            border-right: 3px solid #92400e;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 6px,
+                #78350f 6px,
+                #78350f 9px
+            );
+            transform: rotate(-18deg);
+            transform-origin: top left;
+        }
+
+        /* 4 Cột trụ nhà sàn */
         .mini-stilts {
-            width: 104px;
-            height: 44px;
+            width: 122px;
+            height: 46px;
             display: flex;
             justify-content: space-between;
+            padding: 0 6px;
         }
 
         .mini-stilt {
-            width: 8px;
+            width: 9px;
             height: 100%;
-            background: #92400e;
+            background: linear-gradient(90deg, #92400e, #b45309);
+            border-left: 1px solid #451a03;
+            border-right: 1px solid #451a03;
         }
 
+        /* Hệ thống phao chai nhựa tái chế có nắp */
         .mini-floats {
-            width: 124px;
-            height: 16px;
+            width: 142px;
+            height: 20px;
             display: flex;
             justify-content: space-between;
             margin-top: -4px;
         }
 
         .mini-bottle {
-            width: 34px;
-            height: 15px;
-            background: #bae6fd;
+            width: 46px;
+            height: 18px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(186,230,253,0.75) 100%);
             border: 2px solid #0284c7;
-            border-radius: 8px;
+            border-radius: 9px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: monospace;
+            font-size: 0.58rem;
+            font-weight: 800;
+            color: #0369a1;
+        }
+
+        /* Nắp chai nhựa */
+        .mini-bottle::after {
+            content: "";
+            position: absolute;
+            right: -5px;
+            width: 5px;
+            height: 10px;
+            background: #ef4444;
+            border-radius: 2px;
+            border: 1px solid #991b1b;
+        }
+
+        /* Vector lực vật lý (Trọng lực P & Lực đẩy Ác-si-mét FA) */
+        .force-vectors {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0 2px 22px;
+            transition: opacity 0.2s;
+        }
+
+        .force-vectors.hidden {
+            opacity: 0;
+        }
+
+        .vec-badge {
+            font-family: monospace;
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .vec-fa {
+            background: #16a34a;
+            color: #fff;
+            border: 1px solid #14532d;
+            transform: translateY(0);
+            transition: transform 0.25s;
+        }
+
+        .vec-p {
+            background: #dc2626;
+            color: #fff;
+            border: 1px solid #7f1d1d;
+        }
+
+        /* Khối nước lũ có hiệu ứng sóng */
+        .sim-water {
+            position: absolute;
+            bottom: 18px;
+            left: 0;
+            width: 100%;
+            height: 12%;
+            background: linear-gradient(180deg, rgba(14, 165, 233, 0.62) 0%, rgba(2, 132, 199, 0.85) 100%);
+            border-top: 3px solid #0284c7;
+            transition: height 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 5;
+        }
+
+        .sim-water::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: repeating-linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.45) 0px,
+                rgba(255, 255, 255, 0.45) 16px,
+                transparent 16px,
+                transparent 32px
+            );
+            animation: waveMove 1.8s linear infinite;
+        }
+
+        @keyframes waveMove {
+            from { background-position: 0 0; }
+            to { background-position: 32px 0; }
+        }
+
+        /* Bảng điều khiển & Thông số kỹ thuật bên phải */
+        .sim-controls {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .sim-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .sim-controls h3 {
-            font-size: 1.15rem;
+            font-size: 1.18rem;
             color: var(--primary);
-            margin-bottom: 8px;
         }
 
-        .slider-row {
+        .auto-btn {
+            background: var(--accent);
+            color: #1c1917;
+            border: 1.5px solid var(--border-strong);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+
+        .auto-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .auto-btn.running {
+            background: #dc2626;
+            color: #fff;
+        }
+
+        /* 3 Ô đồng hồ thông số vật lý (Telemetry) */
+        .telemetry-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .tele-card {
+            background: var(--bg-paper);
+            border: 1.5px solid var(--border-line);
+            border-radius: 8px;
+            padding: 8px 10px;
+            text-align: center;
+        }
+
+        .tele-label {
+            display: block;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .tele-val {
+            font-family: monospace;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        /* Thanh kéo mực nước */
+        .slider-box {
+            background: var(--bg-paper);
+            border: 1.5px solid var(--border-line);
+            border-radius: 8px;
+            padding: 10px 14px;
+        }
+
+        .slider-top {
             display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 14px 0;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 6px;
         }
 
-        .slider-row input[type="range"] {
-            flex: 1;
+        .slider-box input[type="range"] {
+            width: 100%;
             accent-color: var(--primary);
             cursor: pointer;
         }
 
+        /* Các nút chọn kịch bản & công tắc phụ */
         .sim-btns {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 14px;
         }
 
         .sim-btn {
-            padding: 6px 12px;
+            flex: 1;
+            min-width: 110px;
+            padding: 7px 10px;
             border: 1.5px solid var(--border-strong);
             background: var(--bg-paper);
             color: var(--text-dark);
-            font-weight: 600;
-            font-size: 0.84rem;
+            font-weight: 700;
+            font-size: 0.82rem;
             border-radius: 6px;
             cursor: pointer;
+            text-align: center;
         }
 
         .sim-btn.active {
@@ -536,18 +898,34 @@
             border-color: var(--primary);
         }
 
+        .sim-toggles {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .sim-toggles label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
         .sim-status {
             background: var(--primary-soft);
             border-left: 4px solid var(--primary);
-            padding: 12px 16px;
+            padding: 12px 14px;
             border-radius: 0 8px 8px 0;
-            font-size: 0.92rem;
+            font-size: 0.9rem;
         }
 
         .sim-status strong {
             display: block;
             color: var(--primary);
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
 
         /* 5. BENTO GRID (NỘI DUNG DỰ ÁN STEM) */
@@ -797,7 +1175,7 @@
     <main class="container">
 
         <!-- =================================================================
-             KHU VỰC 2 HÌNH ẢNH MÔ HÌNH (CHÈN LINK ẢNH GITHUB VÀO src="")
+             KHU VỰC 2 HÌNH ẢNH MÔ HÌNH
              ================================================================= -->
         <section id="mo-hinh">
             <div class="sec-header">
@@ -807,7 +1185,7 @@
 
             <div class="photo-grid">
                 
-                <!-- HÌNH 1 (HÌNH TỔNG QUAN): Dán tên file hoặc link ảnh GitHub vào giữa src="" -->
+                <!-- HÌNH 1 (HÌNH TỔNG QUAN) -->
                 <article class="photo-frame">
                     <div class="frame-topbar">
                         <span>VIEW 01</span>
@@ -822,7 +1200,7 @@
                     </div>
                 </article>
 
-                <!-- HÌNH 2 (HÌNH BÊN HÔNG NHÀ): Dán tên file hoặc link ảnh GitHub vào giữa src="" -->
+                <!-- HÌNH 2 (HÌNH BÊN HÔNG NHÀ) -->
                 <article class="photo-frame">
                     <div class="frame-topbar">
                         <span>VIEW 02</span>
@@ -840,53 +1218,139 @@
             </div>
         </section>
 
-        <!-- MÔ PHỎNG TƯƠNG TÁC & HỒ SƠ THIẾT KẾ STEM -->
+        <!-- MÔ PHỎNG TƯƠNG TÁC NÂNG CẤP & HỒ SƠ THIẾT KẾ STEM -->
         <section id="noi-dung">
             <div class="sec-header">
                 <h2 class="sec-title">Nguyên lý hoạt động & Nội dung STEM</h2>
-                <span class="sec-sub">INTERACTIVE_SIMULATION & DOCS</span>
+                <span class="sec-sub">HYDRO_SIMULATOR v2.0 & DOCS</span>
             </div>
 
-            <!-- BỘ MÔ PHỎNG MỰC NƯỚC LŨ TRỰC QUAN -->
+            <!-- =============================================================
+                 BỘ MÔ PHỎNG THỦY LỰC & LỰC ĐẨY ÁC-SI-MÉT NÂNG CẤP
+                 ============================================================= -->
             <div class="sim-container">
-                <div class="sim-tank">
+                
+                <!-- BỂ THỬ NGHIỆM TRỰC QUAN -->
+                <div class="sim-tank" id="simTank">
+                    <span class="tank-badge" id="tankStateBadge">CHẾ ĐỘ: TRỤ SÀN CỐ ĐỊNH</span>
+
+                    <!-- Thước đo chiều cao mực nước -->
+                    <div class="tank-ruler">
+                        <div class="ruler-mark">4.0m</div>
+                        <div class="ruler-mark">3.0m</div>
+                        <div class="ruler-mark">2.0m</div>
+                        <div class="ruler-mark">1.0m</div>
+                        <div class="ruler-mark">0.0m</div>
+                    </div>
+
+                    <!-- Lớp hiệu ứng mưa rơi -->
+                    <div class="rain-layer"></div>
+
+                    <!-- Cọc dẫn hướng chống trôi ngang -->
+                    <div class="guide-poles">
+                        <div class="guide-pole"></div>
+                        <div class="guide-pole"></div>
+                    </div>
+
+                    <!-- Mô hình Ngôi nhà chống lũ (Mái que gỗ, Thân carton, Cầu thang, Phao chai nhựa) -->
                     <div class="sim-house-wrap" id="simHouse">
                         <div class="mini-roof"></div>
                         <div class="mini-body">
                             <div class="mini-win"></div>
                             <div class="mini-win"></div>
                         </div>
-                        <div class="mini-deck"></div>
+                        <div class="mini-railing"></div>
+                        <div class="mini-deck">
+                            <div class="mini-ladder"></div>
+                        </div>
                         <div class="mini-stilts">
+                            <div class="mini-stilt"></div>
+                            <div class="mini-stilt"></div>
                             <div class="mini-stilt"></div>
                             <div class="mini-stilt"></div>
                         </div>
                         <div class="mini-floats">
-                            <div class="mini-bottle"></div>
-                            <div class="mini-bottle"></div>
+                            <div class="mini-bottle">PHAO 1</div>
+                            <div class="mini-bottle">PHAO 2</div>
+                        </div>
+
+                        <!-- Nhãn Vector lực vật lý -->
+                        <div class="force-vectors" id="forceVectors">
+                            <span class="vec-badge vec-fa" id="vecFaLabel">↑ FA = 0.0 N</span>
+                            <span class="vec-badge vec-p">↓ P = 12.0 N</span>
                         </div>
                     </div>
+
+                    <!-- Khối nước dâng có sóng -->
                     <div class="sim-water" id="simWater"></div>
+
+                    <!-- Mặt đất đáy bể -->
+                    <div class="sim-ground"></div>
                 </div>
 
+                <!-- BẢNG ĐIỀU KHIỂN & ĐỒNG HỒ ĐO THÔNG SỐ -->
                 <div class="sim-controls">
-                    <h3>Mô phỏng khả năng thích ứng theo mực nước</h3>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">
-                        Kéo thanh trượt hoặc bấm chọn các mức nước để quan sát cách chân trụ nhà sàn và phao chai nhựa bảo vệ ngôi nhà:
-                    </p>
-                    <div class="slider-row">
-                        <span style="font-size: 0.85rem; font-weight: 700;">Mực nước:</span>
-                        <input type="range" id="waterSlider" min="10" max="85" value="12" oninput="updateWater(this.value)">
-                        <span id="waterPercent" style="font-family: monospace; font-weight: 800;">12%</span>
+                    <div>
+                        <div class="sim-title-row">
+                            <h3>Mô phỏng Thủy lực & Lực đẩy Ác-si-mét</h3>
+                            <button class="auto-btn" id="autoPlayBtn" onclick="toggleAutoSim()">
+                                ▶ Tự động mô phỏng lũ
+                            </button>
+                        </div>
+                        <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 4px;">
+                            Kéo thanh trượt hoặc bật <strong>Tự động mô phỏng</strong> để quan sát cách 4 trụ nhà sàn và 2 phao chai nhựa ($F_A = d \cdot V$) nâng ngôi nhà nổi lên theo mực nước:
+                        </p>
                     </div>
+
+                    <!-- 3 Đồng hồ đo trực tiếp -->
+                    <div class="telemetry-grid">
+                        <div class="tele-card">
+                            <span class="tele-label">Mực nước lũ</span>
+                            <span class="tele-val" id="teleDepth">0.4 m</span>
+                        </div>
+                        <div class="tele-card">
+                            <span class="tele-label">Lực đẩy phao (FA)</span>
+                            <span class="tele-val" id="teleBuoyancy">0.0 N</span>
+                        </div>
+                        <div class="tele-card">
+                            <span class="tele-label">Độ cao sàn an toàn</span>
+                            <span class="tele-val" id="teleClearance">+1.4 m</span>
+                        </div>
+                    </div>
+
+                    <!-- Thanh trượt điều khiển -->
+                    <div class="slider-box">
+                        <div class="slider-top">
+                            <span>Điều chỉnh mực nước trong bể:</span>
+                            <span id="waterPercent" style="font-family: monospace; color: var(--primary);">10%</span>
+                        </div>
+                        <input type="range" id="waterSlider" min="8" max="86" value="10" oninput="manualWaterChange(this.value)">
+                    </div>
+
+                    <!-- Các mức kịch bản nhanh -->
                     <div class="sim-btns">
-                        <button class="sim-btn active" onclick="setWaterPreset(12, this)">Bình thường</button>
-                        <button class="sim-btn" onclick="setWaterPreset(38, this)">Ngập nhẹ</button>
-                        <button class="sim-btn" onclick="setWaterPreset(78, this)">Lũ dâng cao (Nổi)</button>
+                        <button class="sim-btn active" onclick="setWaterPreset(10, this)">1. Bình thường</button>
+                        <button class="sim-btn" onclick="setWaterPreset(34, this)">2. Ngập chân trụ</button>
+                        <button class="sim-btn" onclick="setWaterPreset(62, this)">3. Lũ lớn (Nhà nổi)</button>
+                        <button class="sim-btn" onclick="setWaterPreset(84, this)">4. Đỉnh lũ lịch sử</button>
                     </div>
+
+                    <!-- Tùy chọn hiển thị -->
+                    <div class="sim-toggles">
+                        <label>
+                            <input type="checkbox" id="toggleForces" checked onchange="toggleForceDisplay()">
+                            Hiển thị vector lực ($P$ & $F_A$)
+                        </label>
+                        <label>
+                            <input type="checkbox" id="toggleRain" checked onchange="updateWater(document.getElementById('waterSlider').value)">
+                            Hiệu ứng mưa bão khi lũ dâng
+                        </label>
+                    </div>
+
+                    <!-- Hộp giải thích trạng thái -->
                     <div class="sim-status" id="simStatus">
-                        <strong>Trạng thái: Ổn định trên nền đất</strong>
-                        4 cột trụ gỗ giữ sàn sinh hoạt khô ráo, cầu thang lên xuống thuận tiện.
+                        <strong>Trạng thái: Ổn định trên nền đất khô ráo</strong>
+                        Trọng lượng ngôi nhà ($P = 12\text{ N}$) được đỡ hoàn toàn bởi 4 cột trụ que gỗ; cầu thang bên hông giúp lên xuống thuận tiện.
                     </div>
                 </div>
             </div>
@@ -1012,43 +1476,149 @@
         </div>
     </footer>
 
-    <!-- JAVASCRIPT TƯƠNG TÁC -->
+    <!-- JAVASCRIPT TƯƠNG TÁC NÂNG CẤP -->
     <script>
-        // 1. Mô phỏng mực nước và lực đẩy nổi của ngôi nhà
+        let autoSimInterval = null;
+        let autoDirection = 1;
+
+        // 1. Hàm cập nhật toàn bộ vật lý, giao diện bể và thông số đo
         function updateWater(val) {
             const waterLevel = parseInt(val, 10);
-            document.getElementById('waterSlider').value = waterLevel;
+            const slider = document.getElementById('waterSlider');
+            const tank = document.getElementById('simTank');
+            const house = document.getElementById('simHouse');
+            const rainEnabled = document.getElementById('toggleRain').checked;
+
+            slider.value = waterLevel;
             document.getElementById('waterPercent').textContent = waterLevel + '%';
             document.getElementById('simWater').style.height = waterLevel + '%';
 
-            // Khi mực nước vượt qua 32%, phao chai nhựa đẩy ngôi nhà nổi lên theo mực nước
-            const houseBottom = waterLevel > 32 ? (waterLevel * 1.45 - 34) : 12;
-            document.getElementById('simHouse').style.bottom = houseBottom + 'px';
+            // Quy đổi mực nước sang mét (tối đa ~4.0m)
+            const depthMeters = (waterLevel * 0.045).toFixed(1);
+            document.getElementById('teleDepth').textContent = depthMeters + ' m';
 
-            const statusBox = document.getElementById('simStatus');
-            if (waterLevel < 30) {
-                statusBox.innerHTML = '<strong>Trạng thái: Ổn định trên nền đất</strong>4 cột trụ gỗ giữ sàn sinh hoạt khô ráo, cầu thang lên xuống thuận tiện.';
-            } else if (waterLevel < 55) {
-                statusBox.innerHTML = '<strong>Trạng thái: Cách ly nước ngập nhẹ</strong>Chân cột nhà sàn cao giúp mặt sàn và không gian bên trong hoàn toàn tách biệt với dòng nước bên dưới.';
+            // Tính toán lực đẩy Ác-si-mét (FA) và độ nổi của nhà
+            let houseBottom = 18;
+            let buoyancyForce = 0.0;
+            let floorClearance = (1.55 - depthMeters * 0.45).toFixed(1);
+
+            if (waterLevel <= 25) {
+                // Nước thấp dưới phao
+                buoyancyForce = (waterLevel * 0.15).toFixed(1);
+                house.classList.remove('floating');
+            } else if (waterLevel <= 38) {
+                // Nước ngập phần phao và chân cột, FA tăng dần tới ngưỡng cân bằng P = 12.0N
+                buoyancyForce = (3.8 + (waterLevel - 25) * 0.63).toFixed(1);
+                house.classList.remove('floating');
             } else {
-                statusBox.innerHTML = '<strong>Trạng thái: Kích hoạt phao nổi chống lũ lớn</strong>Khi nước dâng cao, hệ thống phao chai nhựa kín khí dưới chân cột tạo lực đẩy Ác-si-mét nâng ngôi nhà nổi lên an toàn.';
+                // Khi nước vượt quá 38%, FA cân bằng P = 12.0N, phao đẩy toàn bộ ngôi nhà nổi lên theo mặt nước
+                buoyancyForce = 12.0.toFixed(1);
+                houseBottom = 18 + (waterLevel - 38) * 2.25;
+                floorClearance = (1.1).toFixed(1); // Sàn luôn giữ khoảng cách an toàn trên mặt nước
+                house.classList.add('floating');
+            }
+
+            house.style.bottom = houseBottom + 'px';
+            document.getElementById('teleBuoyancy').textContent = buoyancyForce + ' N';
+            document.getElementById('teleClearance').textContent = '+' + Math.max(0.8, floorClearance) + ' m';
+            document.getElementById('vecFaLabel').textContent = '↑ FA = ' + buoyancyForce + ' N';
+
+            // Hiệu ứng mưa & bầu trời bão khi mực nước cao
+            if (waterLevel >= 30 && rainEnabled) {
+                tank.classList.add('raining');
+            } else {
+                tank.classList.remove('raining');
+            }
+
+            if (waterLevel >= 52 && rainEnabled) {
+                tank.classList.add('stormy');
+            } else {
+                tank.classList.remove('stormy');
+            }
+
+            // Cập nhật thông báo trạng thái
+            const statusBox = document.getElementById('simStatus');
+            const badge = document.getElementById('tankStateBadge');
+
+            if (waterLevel < 26) {
+                badge.textContent = 'CHẾ ĐỘ: TRỤ SÀN CỐ ĐỊNH';
+                statusBox.innerHTML = '<strong>Trạng thái: Ổn định trên nền đất khô ráo</strong>Trọng lượng ngôi nhà (P = 12.0 N) được đỡ hoàn toàn bởi 4 cột trụ que gỗ; cầu thang bên hông giúp di chuyển thuận tiện.';
+            } else if (waterLevel <= 38) {
+                badge.textContent = 'CHẾ ĐỘ: CÁCH LY NGẬP NHẸ';
+                statusBox.innerHTML = '<strong>Trạng thái: Chân trụ nhà sàn cách ly nước ngập</strong>Nước bắt đầu dâng vào phần đế nhưng chưa chạm sàn gỗ. Các chai nhựa kín khí dưới chân trụ bắt đầu tích lũy lực đẩy Ác-si-mét.';
+            } else if (waterLevel <= 70) {
+                badge.textContent = 'CHẾ ĐỘ: PHAO NỔI HOẠT ĐỘNG (FA = P)';
+                statusBox.innerHTML = '<strong>Trạng thái: Kích hoạt hệ thống phao nổi chống lũ</strong>Lực đẩy Ác-si-mét từ các chai nhựa rỗng đạt 12.0 N (cân bằng với trọng lượng nhà), nâng toàn bộ ngôi nhà nổi lên êm ái theo mặt nước.';
+            } else {
+                badge.textContent = 'CẢNH BÁO: ĐỈNH LŨ LỊCH SỬ — AN TOÀN 100%';
+                statusBox.innerHTML = '<strong>Trạng thái: Vượt đỉnh lũ an toàn</strong>Dù nước lũ dâng sát mốc 4m và trời mưa bão, sàn sinh hoạt và buồng nhà vẫn khô ráo, giữ khoảng cách an toàn +1.1m trên mặt nước.';
             }
         }
 
+        function manualWaterChange(val) {
+            stopAutoSim();
+            document.querySelectorAll('.sim-btn').forEach(b => b.classList.remove('active'));
+            updateWater(val);
+        }
+
         function setWaterPreset(val, btn) {
+            stopAutoSim();
             document.querySelectorAll('.sim-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             updateWater(val);
         }
 
-        // 2. Chuyển đổi chế độ Sáng / Bản vẽ Kỹ thuật Tối
+        // 2. Chế độ Tự động mô phỏng cơn lũ (dùng khi thuyết trình)
+        function toggleAutoSim() {
+            if (autoSimInterval) {
+                stopAutoSim();
+            } else {
+                const btn = document.getElementById('autoPlayBtn');
+                btn.classList.add('running');
+                btn.textContent = '⏹ Dừng mô phỏng';
+                document.querySelectorAll('.sim-btn').forEach(b => b.classList.remove('active'));
+
+                autoSimInterval = setInterval(() => {
+                    const slider = document.getElementById('waterSlider');
+                    let current = parseInt(slider.value, 10);
+                    current += autoDirection * 1;
+
+                    if (current >= 85) {
+                        current = 85;
+                        autoDirection = -1;
+                    } else if (current <= 10) {
+                        current = 10;
+                        autoDirection = 1;
+                    }
+                    updateWater(current);
+                }, 70);
+            }
+        }
+
+        function stopAutoSim() {
+            if (autoSimInterval) {
+                clearInterval(autoSimInterval);
+                autoSimInterval = null;
+            }
+            const btn = document.getElementById('autoPlayBtn');
+            btn.classList.remove('running');
+            btn.textContent = '▶ Tự động mô phỏng lũ';
+        }
+
+        // 3. Bật / tắt hiển thị nhãn Vector lực
+        function toggleForceDisplay() {
+            const show = document.getElementById('toggleForces').checked;
+            document.getElementById('forceVectors').classList.toggle('hidden', !show);
+        }
+
+        // 4. Chuyển đổi chế độ Sáng / Tối
         function toggleTheme() {
             document.body.classList.toggle('blueprint-mode');
             const isDark = document.body.classList.contains('blueprint-mode');
-            document.getElementById('themeBtn').textContent = isDark ? '☀️ Chế độ Bản vẽ Sáng' : '🌙 Chế độ Bản vẽ Tối';
+            document.getElementById('themeBtn').textContent = isDark ? '☀️ Chế độ Sáng' : '🌙 Chế độ Tối';
         }
 
-        // 3. Click phóng to ảnh khi đã chèn link vào src=""
+        // 5. Click phóng to ảnh (Lightbox)
         document.querySelectorAll('.product-img').forEach(img => {
             img.addEventListener('click', () => {
                 if (img.getAttribute('src') && img.getAttribute('src').trim() !== '') {
@@ -1057,6 +1627,9 @@
                 }
             });
         });
+
+        // Khởi chạy thông số ban đầu
+        updateWater(10);
     </script>
 
 </body>
