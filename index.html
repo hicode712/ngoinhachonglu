@@ -3,19 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dự Án STEM: Ngôi Nhà Chống Lũ | Lớp 9A6 - THCS Đoàn Thị Điểm</title>
+    <title>Dự Án STEM: Ngôi Nhà Chống Lũ | Nguyễn Minh Ái Thiên - 9A6</title>
     <style>
         :root {
-            --bg-paper: #f7f5f0;
+            --bg-paper: #f6f4ee;
             --bg-surface: #ffffff;
-            --primary: #1b4d3e;       /* Xanh rừng tràm */
-            --primary-soft: #e6f0ed;
+            --bg-subtle: #eae6dc;
+            --primary: #14532d;       /* Xanh rừng đậm */
+            --primary-soft: #dcfce7;
             --accent: #d97706;        /* Cam gỗ ấm */
             --accent-soft: #fef3c7;
             --text-dark: #1c1917;
             --text-muted: #57534e;
+            --border-strong: #1c1917;
             --border-line: #d6d3cd;
-            --shadow-hard: 5px 5px 0px #d6d3cd;
+            --shadow-hard: 5px 5px 0px #1c1917;
+            --grid-dot: #cfcac0;
+        }
+
+        /* Chế độ Bản vẽ Kỹ thuật Tối (Blueprint Dark Mode) */
+        body.blueprint-mode {
+            --bg-paper: #0f172a;
+            --bg-surface: #1e293b;
+            --bg-subtle: #0b1120;
+            --primary: #38bdf8;
+            --primary-soft: rgba(56, 189, 248, 0.15);
+            --accent: #fbbf24;
+            --accent-soft: rgba(251, 191, 36, 0.15);
+            --text-dark: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-strong: #38bdf8;
+            --border-line: #334155;
+            --shadow-hard: 5px 5px 0px rgba(56, 189, 248, 0.35);
+            --grid-dot: #1e293b;
         }
 
         * {
@@ -28,15 +48,15 @@
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-paper);
-            /* Hiệu ứng giấy chấm kỹ thuật kiến trúc */
-            background-image: radial-gradient(#d6d3cd 1px, transparent 1px);
-            background-size: 24px 24px;
+            background-image: radial-gradient(var(--grid-dot) 1.25px, transparent 1.25px);
+            background-size: 22px 22px;
             color: var(--text-dark);
             line-height: 1.65;
+            transition: background-color 0.25s, color 0.25s;
         }
 
         .container {
-            max-width: 1040px;
+            max-width: 1060px;
             margin: 0 auto;
             padding: 0 20px;
         }
@@ -46,10 +66,9 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(247, 245, 240, 0.92);
-            backdrop-filter: blur(8px);
-            border-bottom: 2px solid var(--text-dark);
-            padding: 14px 0;
+            background: var(--bg-surface);
+            border-bottom: 2px solid var(--border-strong);
+            padding: 12px 0;
         }
 
         .nav-inner {
@@ -62,27 +81,34 @@
 
         .brand {
             font-weight: 800;
-            font-size: 1.05rem;
-            color: var(--primary);
-            letter-spacing: 0.5px;
+            font-size: 1rem;
+            color: var(--text-dark);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
-        .brand span {
+        .brand-badge {
             background: var(--primary);
-            color: #fff;
-            padding: 2px 8px;
+            color: var(--bg-surface);
+            padding: 3px 10px;
             border-radius: 4px;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
         }
 
         .nav-links {
             display: flex;
-            gap: 20px;
+            gap: 18px;
             list-style: none;
-            font-size: 0.92rem;
+            font-size: 0.9rem;
             font-weight: 600;
         }
 
@@ -96,10 +122,26 @@
             color: var(--accent);
         }
 
-        /* 2. HERO SECTION (BỐ CỤC BẤT ĐỐI XỨNG 2 CỘT) */
+        .theme-toggle {
+            background: var(--bg-paper);
+            color: var(--text-dark);
+            border: 1.5px solid var(--border-strong);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 2. HERO SECTION */
         .hero {
-            padding: 56px 0 40px;
-            border-bottom: 1px solid var(--border-line);
+            padding: 52px 0 42px;
+            border-bottom: 1.5px solid var(--border-line);
         }
 
         .hero-grid {
@@ -109,7 +151,7 @@
             align-items: center;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 780px) {
             .hero-grid {
                 grid-template-columns: 1fr;
             }
@@ -118,58 +160,60 @@
         .topic-tag {
             display: inline-block;
             background: var(--accent-soft);
-            color: #92400e;
-            border: 1.5px solid #f59e0b;
-            font-weight: 700;
-            font-size: 0.82rem;
+            color: var(--accent);
+            border: 1.5px solid var(--accent);
+            font-weight: 800;
+            font-size: 0.8rem;
             padding: 4px 12px;
             border-radius: 6px;
             text-transform: uppercase;
-            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            margin-bottom: 14px;
         }
 
         .hero h1 {
-            font-size: 2.7rem;
-            line-height: 1.15;
+            font-size: 2.75rem;
+            line-height: 1.12;
             color: var(--primary);
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             letter-spacing: -0.5px;
         }
 
         .hero-slogan {
-            font-size: 1.15rem;
-            font-weight: 600;
+            font-size: 1.12rem;
+            font-weight: 700;
             color: var(--accent);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .hero-desc {
             color: var(--text-muted);
-            font-size: 1rem;
+            font-size: 0.98rem;
         }
 
-        /* Bảng hồ sơ kỹ thuật bên phải Hero */
+        /* Thẻ Hồ sơ cá nhân */
         .spec-box {
             background: var(--bg-surface);
-            border: 2px solid var(--text-dark);
+            border: 2px solid var(--border-strong);
             box-shadow: var(--shadow-hard);
             border-radius: 10px;
             padding: 22px;
         }
 
         .spec-box h3 {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--primary);
             border-bottom: 2px solid var(--border-line);
             padding-bottom: 10px;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .spec-row {
             display: flex;
             justify-content: space-between;
+            gap: 12px;
             padding: 8px 0;
             border-bottom: 1px dashed var(--border-line);
             font-size: 0.92rem;
@@ -190,10 +234,15 @@
             text-align: right;
         }
 
+        .spec-val.highlight {
+            color: var(--primary);
+            font-size: 0.98rem;
+        }
+
         /* TIÊU ĐỀ CÁC PHẦN */
         section {
             padding: 48px 0;
-            border-bottom: 1px solid var(--border-line);
+            border-bottom: 1.5px solid var(--border-line);
         }
 
         .sec-header {
@@ -201,12 +250,12 @@
             align-items: baseline;
             justify-content: space-between;
             flex-wrap: wrap;
-            margin-bottom: 28px;
+            margin-bottom: 26px;
             gap: 10px;
         }
 
         .sec-title {
-            font-size: 1.6rem;
+            font-size: 1.55rem;
             color: var(--primary);
             display: flex;
             align-items: center;
@@ -216,19 +265,19 @@
         .sec-title::before {
             content: "";
             display: inline-block;
-            width: 12px;
+            width: 10px;
             height: 24px;
             background: var(--accent);
-            border-radius: 3px;
+            border-radius: 2px;
         }
 
         .sec-sub {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             font-family: monospace;
         }
 
-        /* 3. KHU VỰC 2 HÌNH ẢNH SẢN PHẨM (STUDIO FRAME) */
+        /* 3. KHU VỰC 2 HÌNH ẢNH MÔ HÌNH */
         .photo-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -237,7 +286,7 @@
 
         .photo-frame {
             background: var(--bg-surface);
-            border: 2px solid var(--text-dark);
+            border: 2px solid var(--border-strong);
             box-shadow: var(--shadow-hard);
             border-radius: 10px;
             overflow: hidden;
@@ -250,9 +299,10 @@
 
         .frame-topbar {
             background: var(--primary);
-            color: #fff;
-            padding: 8px 14px;
-            font-size: 0.8rem;
+            color: var(--bg-surface);
+            padding: 9px 16px;
+            font-size: 0.82rem;
+            font-weight: 700;
             font-family: monospace;
             display: flex;
             justify-content: space-between;
@@ -262,7 +312,7 @@
         .photo-viewport {
             width: 100%;
             height: 390px;
-            background-color: #ece9e2;
+            background-color: var(--bg-subtle);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -291,7 +341,7 @@
             font-family: monospace;
             font-size: 0.9rem;
             padding: 24px;
-            border: 2px dashed #a8a29e;
+            border: 2px dashed var(--border-line);
             border-radius: 8px;
             width: calc(100% - 24px);
             height: calc(100% - 24px);
@@ -302,72 +352,205 @@
 
         .frame-caption {
             padding: 14px 16px;
-            border-top: 1px solid var(--border-line);
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: var(--text-dark);
+            border-top: 1.5px solid var(--border-line);
             background: var(--bg-surface);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* 4. BỘ MÔ PHỎNG TƯƠNG TÁC CƠ CHẾ HOẠT ĐỘNG */
-        .sim-box {
+        .frame-caption strong {
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+
+        .frame-caption span {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        /* 4. BỘ MÔ PHỎNG MỰC NƯỚC TRỰC QUAN (UPGRADED SIMULATOR) */
+        .sim-container {
             background: var(--bg-surface);
-            border: 2px solid var(--text-dark);
+            border: 2px solid var(--border-strong);
             box-shadow: var(--shadow-hard);
             border-radius: 10px;
             padding: 24px;
             margin-bottom: 32px;
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 24px;
+            align-items: center;
         }
 
-        .sim-header {
+        @media (max-width: 780px) {
+            .sim-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Hồ nước mô phỏng bằng CSS */
+        .sim-tank {
+            height: 230px;
+            border: 2px solid var(--border-strong);
+            border-radius: 8px;
+            background: linear-gradient(to bottom, #e0f2fe 0%, #f0f9ff 100%);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        body.blueprint-mode .sim-tank {
+            background: linear-gradient(to bottom, #0f172a 0%, #1e293b 100%);
+        }
+
+        .sim-water {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 12%;
+            background: rgba(2, 132, 199, 0.55);
+            border-top: 3px solid #0284c7;
+            transition: height 0.3s ease;
+            z-index: 2;
+        }
+
+        .sim-house-wrap {
+            position: absolute;
+            bottom: 12px;
+            width: 150px;
+            height: 155px;
+            transition: bottom 0.3s ease;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Hình vẽ ngôi nhà mini trong bộ mô phỏng */
+        .mini-roof {
+            width: 0;
+            height: 0;
+            border-left: 62px solid transparent;
+            border-right: 62px solid transparent;
+            border-bottom: 38px solid #b45309;
+        }
+
+        .mini-body {
+            width: 96px;
+            height: 50px;
+            background: #e7e5e4;
+            border: 2px solid #44403c;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 10px;
+        }
+
+        .mini-win {
+            width: 20px;
+            height: 20px;
+            background: #fde68a;
+            border: 2px solid #78350f;
+        }
+
+        .mini-deck {
+            width: 132px;
+            height: 10px;
+            background: #d97706;
+            border: 2px solid #78350f;
+        }
+
+        .mini-stilts {
+            width: 104px;
+            height: 44px;
             display: flex;
             justify-content: space-between;
+        }
+
+        .mini-stilt {
+            width: 8px;
+            height: 100%;
+            background: #92400e;
+        }
+
+        .mini-floats {
+            width: 124px;
+            height: 16px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: -4px;
+        }
+
+        .mini-bottle {
+            width: 34px;
+            height: 15px;
+            background: #bae6fd;
+            border: 2px solid #0284c7;
+            border-radius: 8px;
+        }
+
+        .sim-controls h3 {
+            font-size: 1.15rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .slider-row {
+            display: flex;
             align-items: center;
-            flex-wrap: wrap;
             gap: 12px;
-            margin-bottom: 16px;
+            margin: 14px 0;
+        }
+
+        .slider-row input[type="range"] {
+            flex: 1;
+            accent-color: var(--primary);
+            cursor: pointer;
         }
 
         .sim-btns {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            margin-bottom: 14px;
         }
 
         .sim-btn {
-            padding: 8px 16px;
-            border: 1.5px solid var(--text-dark);
+            padding: 6px 12px;
+            border: 1.5px solid var(--border-strong);
             background: var(--bg-paper);
             color: var(--text-dark);
             font-weight: 600;
-            font-size: 0.88rem;
+            font-size: 0.84rem;
             border-radius: 6px;
             cursor: pointer;
-            transition: all 0.15s;
         }
 
         .sim-btn.active {
             background: var(--primary);
-            color: #fff;
+            color: var(--bg-surface);
             border-color: var(--primary);
         }
 
-        .sim-display {
+        .sim-status {
             background: var(--primary-soft);
             border-left: 4px solid var(--primary);
-            padding: 16px 20px;
+            padding: 12px 16px;
             border-radius: 0 8px 8px 0;
-            font-size: 0.96rem;
+            font-size: 0.92rem;
         }
 
-        .sim-display strong {
-            color: var(--primary);
+        .sim-status strong {
             display: block;
-            margin-bottom: 4px;
-            font-size: 1.05rem;
+            color: var(--primary);
+            margin-bottom: 3px;
         }
 
-        /* 5. BENTO GRID (NỘI DUNG MỤC 1, 2, 3, 6) */
+        /* 5. BENTO GRID (NỘI DUNG DỰ ÁN STEM) */
         .bento-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -382,7 +565,7 @@
 
         .bento-card {
             background: var(--bg-surface);
-            border: 2px solid var(--text-dark);
+            border: 2px solid var(--border-strong);
             box-shadow: var(--shadow-hard);
             border-radius: 10px;
             padding: 24px;
@@ -394,20 +577,20 @@
             top: 18px;
             right: 18px;
             font-family: monospace;
-            font-size: 0.85rem;
-            font-weight: 700;
+            font-size: 0.82rem;
+            font-weight: 800;
             background: var(--accent-soft);
-            color: #92400e;
+            color: var(--accent);
             padding: 3px 10px;
             border-radius: 4px;
-            border: 1px solid #f59e0b;
+            border: 1px solid var(--accent);
         }
 
         .bento-card h3 {
-            font-size: 1.2rem;
+            font-size: 1.18rem;
             color: var(--primary);
             margin-bottom: 14px;
-            padding-right: 70px;
+            padding-right: 75px;
         }
 
         .bento-card ul {
@@ -417,23 +600,22 @@
         .bento-card ul li {
             position: relative;
             padding-left: 20px;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
+            margin-bottom: 9px;
+            font-size: 0.94rem;
         }
 
         .bento-card ul li::before {
-            content: "▪";
+            content: "▸";
             color: var(--accent);
-            font-size: 1.2rem;
+            font-weight: bold;
             position: absolute;
             left: 0;
-            top: -2px;
         }
 
-        /* 6. TIMELINE DỌC CHO MỤC 4 (5 BƯỚC TIẾN HÀNH) */
+        /* 6. TIMELINE 5 BƯỚC CHẾ TẠO */
         .timeline {
             position: relative;
-            max-width: 780px;
+            max-width: 800px;
             margin: 0 auto;
             padding-left: 32px;
             border-left: 3px solid var(--primary);
@@ -442,7 +624,7 @@
         .timeline-item {
             position: relative;
             background: var(--bg-surface);
-            border: 2px solid var(--text-dark);
+            border: 2px solid var(--border-strong);
             box-shadow: var(--shadow-hard);
             border-radius: 10px;
             padding: 18px 22px;
@@ -469,58 +651,60 @@
             font-weight: 800;
             text-transform: uppercase;
             color: var(--accent);
-            letter-spacing: 0.5px;
         }
 
         .timeline-item h4 {
-            font-size: 1.08rem;
+            font-size: 1.06rem;
             color: var(--primary);
             margin: 2px 0 6px;
         }
 
         .timeline-item p {
-            font-size: 0.94rem;
+            font-size: 0.93rem;
             color: var(--text-muted);
         }
 
-        /* 7. BANNER THÔNG ĐIỆP (MỤC 5) */
+        /* 7. BANNER THÔNG ĐIỆP */
         .quote-banner {
             margin: 48px 0;
             background: var(--primary);
             color: #ffffff;
-            border: 2px solid var(--text-dark);
+            border: 2px solid var(--border-strong);
             box-shadow: var(--shadow-hard);
             border-radius: 12px;
-            padding: 36px 28px;
+            padding: 34px 26px;
             text-align: center;
+        }
+
+        body.blueprint-mode .quote-banner {
+            background: #1e293b;
         }
 
         .quote-banner span {
             display: inline-block;
             background: var(--accent);
-            color: #fff;
+            color: #1c1917;
             font-size: 0.8rem;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: uppercase;
             padding: 4px 12px;
             border-radius: 4px;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .quote-banner p {
-            font-size: 1.35rem;
+            font-size: 1.3rem;
             font-weight: 700;
             max-width: 760px;
             margin: 0 auto;
-            line-height: 1.45;
         }
 
-        /* LIGHTBOX PHÓNG TO ẢNH KHI CLICK */
+        /* LIGHTBOX PHÓNG TO ẢNH */
         .lightbox {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.88);
             z-index: 999;
             align-items: center;
             justify-content: center;
@@ -542,8 +726,8 @@
         /* FOOTER */
         footer {
             background: var(--bg-surface);
-            border-top: 2px solid var(--text-dark);
-            padding: 28px 0;
+            border-top: 2px solid var(--border-strong);
+            padding: 26px 0;
             text-align: center;
             font-size: 0.92rem;
             color: var(--text-muted);
@@ -556,14 +740,18 @@
     <nav>
         <div class="container nav-inner">
             <div class="brand">
-                <span>STEM 4</span> LỚP 9A6 • THCS ĐOÀN THỊ ĐIỂM
+                <span class="brand-badge">STEM</span> NGUYỄN MINH ÁI THIÊN • 9A6
             </div>
-            <ul class="nav-links">
-                <li><a href="#mo-hinh">Hình ảnh mô hình</a></li>
-                <li><a href="#noi-dung">Hồ sơ thiết kế</a></li>
-                <li><a href="#quy-trinh">Quy trình 5 bước</a></li>
-                <li><a href="#thong-diep">Thông điệp</a></li>
-            </ul>
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="#mo-hinh">Hình ảnh mô hình</a></li>
+                    <li><a href="#noi-dung">Giải pháp STEM</a></li>
+                    <li><a href="#quy-trinh">Quy trình</a></li>
+                </ul>
+                <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+                    🌙 Chế độ Bản vẽ Tối
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -571,31 +759,35 @@
     <header class="hero">
         <div class="container hero-grid">
             <div>
-                <span class="topic-tag">Chủ đề STEM 4 • Dự án Khoa học Kỹ thuật</span>
+                <span class="topic-tag">Dự án STEM • Khoa học & Kỹ thuật</span>
                 <h1>NGÔI NHÀ CHỐNG LŨ</h1>
                 <p class="hero-slogan">“Sáng tạo hôm nay – Cuộc sống an toàn hơn ngày mai!”</p>
                 <p class="hero-desc">
-                    Mô hình ngôi nhà chống lũ của tập thể <strong>Lớp 9A6</strong> kết hợp nguyên lý nhà sàn trụ cao truyền thống cùng hệ thống phao nổi tái chế dưới chân đế, mang lại giải pháp thích ứng an toàn, bền vững và gần gũi với các vùng rốn lũ.
+                    Sản phẩm mô hình <strong>Ngôi nhà chống lũ</strong> do học sinh <strong>Nguyễn Minh Ái Thiên (Lớp 9A6)</strong> thực hiện, ứng dụng kết cấu nhà sàn trụ cao kết hợp hệ thống phao nổi từ chai nhựa tái chế giúp bảo vệ không gian sống an toàn trước thiên tai lũ lụt.
                 </p>
             </div>
 
-            <!-- Bảng tóm tắt thông số -->
+            <!-- Bảng thông tin cá nhân -->
             <aside class="spec-box">
-                <h3>Hồ sơ sản phẩm</h3>
+                <h3>Hồ sơ thực hiện</h3>
                 <div class="spec-row">
-                    <span class="spec-label">Đơn vị thực hiện</span>
-                    <span class="spec-val">Lớp 9A6</span>
+                    <span class="spec-label">Người thực hiện</span>
+                    <span class="spec-val highlight">Nguyễn Minh Ái Thiên</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">Lớp</span>
+                    <span class="spec-val">9A6</span>
                 </div>
                 <div class="spec-row">
                     <span class="spec-label">Trường</span>
                     <span class="spec-val">THCS Đoàn Thị Điểm</span>
                 </div>
                 <div class="spec-row">
-                    <span class="spec-label">Kết cấu chính</span>
-                    <span class="spec-val">Nhà sàn + Đế phao nổi</span>
+                    <span class="spec-label">Chủ đề</span>
+                    <span class="spec-val">STEM – Ngôi nhà chống lũ</span>
                 </div>
                 <div class="spec-row">
-                    <span class="spec-label">Vật liệu chủ đạo</span>
+                    <span class="spec-label">Vật liệu chính</span>
                     <span class="spec-val">Que gỗ, Carton, Chai nhựa</span>
                 </div>
             </aside>
@@ -609,63 +801,93 @@
              ================================================================= -->
         <section id="mo-hinh">
             <div class="sec-header">
-                <h2 class="sec-title">5. Sản phẩm hoàn thiện thực tế</h2>
-                <span class="sec-sub">MODEL_GALLERY // 02 PHOTOS</span>
+                <h2 class="sec-title">Hình ảnh sản phẩm thực tế</h2>
+                <span class="sec-sub">STEM_MODEL // 02 VIEWS</span>
             </div>
 
             <div class="photo-grid">
                 
-                <!-- HÌNH 1: Dán tên file hoặc link ảnh GitHub thứ nhất vào giữa src="" -->
+                <!-- HÌNH 1 (HÌNH TOÀN DIỆN): Dán tên file hoặc link ảnh GitHub vào giữa src="" -->
                 <article class="photo-frame">
                     <div class="frame-topbar">
-                        <span>ANH_01.JPG</span>
-                        <span>GÓC NHÌN TỔNG THỂ</span>
+                        <span>VIEW 01</span>
+                        <span>HÌNH TOÀN DIỆN</span>
                     </div>
                     <div class="photo-viewport">
-                        <img src="" alt="Góc nhìn tổng thể mái nhà que gỗ, hành lang và trụ sàn" class="product-img">
+                        <img src="" alt="Hình toàn diện mô hình ngôi nhà chống lũ" class="product-img">
                     </div>
                     <div class="frame-caption">
-                        Kết cấu mái dốc lợp que gỗ, hành lang lan can và 4 trụ nhà sàn
+                        <strong>Hình toàn diện</strong>
+                        <span>Tổng thể mái que gỗ, hành lang & trụ sàn</span>
                     </div>
                 </article>
 
-                <!-- HÌNH 2: Dán tên file hoặc link ảnh GitHub thứ hai vào giữa src="" -->
+                <!-- HÌNH 2 (HÌNH ĐỐI DIỆN NHÀ): Dán tên file hoặc link ảnh GitHub vào giữa src="" -->
                 <article class="photo-frame">
                     <div class="frame-topbar">
-                        <span>ANH_02.JPG</span>
-                        <span>CẤU TẠO CHI TIẾT</span>
+                        <span>VIEW 02</span>
+                        <span>HÌNH ĐỐI DIỆN NHÀ</span>
                     </div>
                     <div class="photo-viewport">
-                        <img src="" alt="Góc nhìn mặt trước với cửa sổ, cầu thang và phao chai nhựa" class="product-img">
+                        <img src="" alt="Hình đối diện nhà với cửa sổ, cầu thang và phao chai nhựa" class="product-img">
                     </div>
                     <div class="frame-caption">
-                        Mặt đứng với cửa sổ, cầu thang gỗ và hệ thống phao chai nhựa dưới chân trụ
+                        <strong>Hình đối diện nhà</strong>
+                        <span>Mặt chính diện cửa sổ, cầu thang & đế phao</span>
                     </div>
                 </article>
 
             </div>
         </section>
 
-        <!-- NỘI DUNG CHỦ ĐỀ STEM 4 & MÔ PHỎNG TƯƠNG TÁC -->
+        <!-- MÔ PHỎNG TƯƠNG TÁC & HỒ SƠ THIẾT KẾ STEM -->
         <section id="noi-dung">
             <div class="sec-header">
-                <h2 class="sec-title">Hồ sơ thiết kế & Giải pháp STEM</h2>
-                <span class="sec-sub">STEM_DOC // SECTION 1, 2, 3, 6</span>
+                <h2 class="sec-title">Nguyên lý hoạt động & Nội dung STEM</h2>
+                <span class="sec-sub">INTERACTIVE_SIMULATION & DOCS</span>
             </div>
 
-            <!-- Thanh mô phỏng tương tác cơ chế hoạt động -->
-            <div class="sim-box">
-                <div class="sim-header">
-                    <strong>Kiểm tra cơ chế thích ứng của mô hình theo mực nước:</strong>
-                    <div class="sim-btns">
-                        <button class="sim-btn active" onclick="setMode(0, this)">1. Thời tiết bình thường</button>
-                        <button class="sim-btn" onclick="setMode(1, this)">2. Mưa lớn & Ngập nhẹ</button>
-                        <button class="sim-btn" onclick="setMode(2, this)">3. Lũ dâng cao</button>
+            <!-- BỘ MÔ PHỎNG MỰC NƯỚC LŨ TRỰC QUAN -->
+            <div class="sim-container">
+                <div class="sim-tank">
+                    <div class="sim-house-wrap" id="simHouse">
+                        <div class="mini-roof"></div>
+                        <div class="mini-body">
+                            <div class="mini-win"></div>
+                            <div class="mini-win"></div>
+                        </div>
+                        <div class="mini-deck"></div>
+                        <div class="mini-stilts">
+                            <div class="mini-stilt"></div>
+                            <div class="mini-stilt"></div>
+                        </div>
+                        <div class="mini-floats">
+                            <div class="mini-bottle"></div>
+                            <div class="mini-bottle"></div>
+                        </div>
                     </div>
+                    <div class="sim-water" id="simWater"></div>
                 </div>
-                <div class="sim-display" id="sim-output">
-                    <strong>Trạng thái: Ổn định trên nền đất</strong>
-                    Hệ thống 4 trụ gỗ chịu lực giữ sàn sinh hoạt khô ráo, thoáng mát; cầu thang giúp di chuyển lên xuống thuận tiện và hành lang rộng phục vụ sinh hoạt.
+
+                <div class="sim-controls">
+                    <h3>Mô phỏng khả năng thích ứng theo mực nước</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">
+                        Kéo thanh trượt hoặc bấm chọn các mức nước để quan sát cách chân trụ nhà sàn và phao chai nhựa bảo vệ ngôi nhà:
+                    </p>
+                    <div class="slider-row">
+                        <span style="font-size: 0.85rem; font-weight: 700;">Mực nước:</span>
+                        <input type="range" id="waterSlider" min="10" max="85" value="12" oninput="updateWater(this.value)">
+                        <span id="waterPercent" style="font-family: monospace; font-weight: 800;">12%</span>
+                    </div>
+                    <div class="sim-btns">
+                        <button class="sim-btn active" onclick="setWaterPreset(12, this)">Bình thường</button>
+                        <button class="sim-btn" onclick="setWaterPreset(38, this)">Ngập nhẹ</button>
+                        <button class="sim-btn" onclick="setWaterPreset(78, this)">Lũ dâng cao (Nổi)</button>
+                    </div>
+                    <div class="sim-status" id="simStatus">
+                        <strong>Trạng thái: Ổn định trên nền đất</strong>
+                        4 cột trụ gỗ giữ sàn sinh hoạt khô ráo, cầu thang lên xuống thuận tiện.
+                    </div>
                 </div>
             </div>
 
@@ -674,104 +896,104 @@
                 
                 <!-- Mục 1 -->
                 <div class="bento-card">
-                    <span class="bento-num">MỤC 01</span>
+                    <span class="bento-num">PHẦN 01</span>
                     <h3>Xác định ý tưởng</h3>
                     <ul>
-                        <li>Thiết kế ngôi nhà đảm bảo an toàn khi nước lũ dâng cao.</li>
-                        <li>Kết hợp các giải pháp kỹ thuật phù hợp và khả thi.</li>
-                        <li>Tận dụng nguồn vật liệu tái chế đơn giản, dễ tìm quanh ta.</li>
-                        <li>Đảm bảo tính thực tiễn, gần gũi với đặc thù địa phương.</li>
-                        <li>Trang trí trực quan, lồng ghép tuyên truyền phòng tránh lũ lụt.</li>
+                        <li>Ngôi nhà đảm bảo an toàn khi mực nước dâng cao.</li>
+                        <li>Áp dụng các giải pháp kỹ thuật phù hợp (kết cấu nhà sàn kết hợp phao nổi).</li>
+                        <li>Sử dụng vật liệu tái chế đơn giản, dễ tìm và thân thiện môi trường.</li>
+                        <li>Có tính thực tiễn cao, gần gũi với vùng thường xuyên ngập lụt.</li>
+                        <li>Kết hợp tuyên truyền ý thức chủ động phòng, tránh lũ lụt.</li>
                     </ul>
                 </div>
 
                 <!-- Mục 2 -->
                 <div class="bento-card">
-                    <span class="bento-num">MỤC 02</span>
+                    <span class="bento-num">PHẦN 02</span>
                     <h3>Chuẩn bị vật liệu</h3>
                     <ul>
-                        <li><strong>Bìa carton:</strong> Làm mặt nền, tường bao và vách nhà nhẹ.</li>
-                        <li><strong>Que gỗ, thanh tre:</strong> Ghép cột trụ, khung sàn, mái dốc, lan can và cầu thang.</li>
+                        <li><strong>Bìa carton:</strong> Làm nền, tường bao và vách nhà trọng lượng nhẹ.</li>
+                        <li><strong>Que gỗ, thanh tre:</strong> Ghép cột trụ, mặt sàn, mái dốc, lan can và cầu thang.</li>
                         <li><strong>Chai nhựa, nắp chai:</strong> Tạo hệ thống phao nổi kín khí gắn dưới chân trụ.</li>
-                        <li><strong>Keo nến, súng bắn keo, băng dính, kéo, thước:</strong> Cố định và đo đạc kết cấu.</li>
-                        <li><strong>Giấy màu, sơn:</strong> Hoàn thiện thẩm mỹ khung cửa sổ và chi tiết phụ.</li>
+                        <li><strong>Keo nến, súng bắn keo, băng dính, kéo, thước:</strong> Gia công và liên kết khung.</li>
+                        <li><strong>Giấy màu, màu vẽ:</strong> Trang trí khung cửa sổ và hoàn thiện chi tiết.</li>
                     </ul>
                 </div>
 
                 <!-- Mục 3 -->
                 <div class="bento-card">
-                    <span class="bento-num">MỤC 03</span>
+                    <span class="bento-num">PHẦN 03</span>
                     <h3>Thiết kế mô hình & Giải pháp</h3>
                     <ul>
-                        <li><strong>Nhà sàn cao & Cột chắc chắn:</strong> Nâng toàn bộ không gian ở tách biệt khỏi mặt nước.</li>
-                        <li><strong>Nền nổi bằng phao:</strong> Chai nhựa rỗng tạo lực đẩy Ác-si-mét giúp mô hình nổi khi nước vượt mức trụ.</li>
-                        <li><strong>Mái dốc thoát nước tốt:</strong> Mái ghép từ các thanh gỗ dốc đều sang hai bên.</li>
-                        <li><strong>Khu vực tránh lũ an toàn:</strong> Có hành lang bao quanh, cầu thang và không gian dự trữ trên cao.</li>
+                        <li><strong>Nhà sàn cao & Cột chắc chắn:</strong> Nâng toàn bộ sàn sinh hoạt cách ly khỏi mặt nước.</li>
+                        <li><strong>Nền nổi bằng phao:</strong> Chai nhựa rỗng dưới chân cột tạo lực đẩy Ác-si-mét khi lũ lớn.</li>
+                        <li><strong>Mái dốc thoát nước tốt:</strong> Mái lợp que gỗ dốc đều giúp nước mưa trôi nhanh.</li>
+                        <li><strong>Hành lang & Cầu thang:</strong> Có lan can bảo vệ an toàn xung quanh và cầu thang lên xuống.</li>
                     </ul>
                 </div>
 
-                <!-- Mục 6 -->
+                <!-- Mục 4 -->
                 <div class="bento-card">
-                    <span class="bento-num">MỤC 06</span>
+                    <span class="bento-num">PHẦN 04</span>
                     <h3>Giới thiệu & Thuyết trình sản phẩm</h3>
                     <ul>
-                        <li><strong>Tên sản phẩm:</strong> Mô hình Ngôi nhà chống lũ – Lớp 9A6.</li>
-                        <li><strong>Nguyên lý hoạt động:</strong> Phối hợp độ cao của trụ nhà sàn, sức nổi của phao chai nhựa và mái dốc thoát nước nhanh.</li>
-                        <li><strong>Lợi ích cộng đồng:</strong> Giảm thiểu thiệt hại về người và tài sản mùa mưa bão; tái chế rác thải nhựa.</li>
-                        <li><strong>Lời kêu gọi:</strong> Nâng cao ý thức chủ động phòng, tránh thiên tai lũ lụt.</li>
+                        <li><strong>Tên sản phẩm:</strong> Mô hình Ngôi nhà chống lũ.</li>
+                        <li><strong>Người thực hiện:</strong> Nguyễn Minh Ái Thiên – Lớp 9A6.</li>
+                        <li><strong>Cách hoạt động:</strong> Kết hợp độ cao của trụ sàn, sức nổi của phao chai nhựa và mái dốc thoát nước.</li>
+                        <li><strong>Lợi ích & Ý nghĩa:</strong> Bảo vệ sự an toàn của người dân mùa mưa lũ và tận dụng rác thải nhựa.</li>
                     </ul>
                 </div>
 
             </div>
         </section>
 
-        <!-- MỤC 4: QUY TRÌNH 5 BƯỚC (TIMELINE DỌC) -->
+        <!-- QUY TRÌNH 5 BƯỚC CHẾ TẠO -->
         <section id="quy-trinh">
             <div class="sec-header">
-                <h2 class="sec-title">4. Tiến hành làm mô hình</h2>
-                <span class="sec-sub">BUILD_PROCESS // 05 STEPS</span>
+                <h2 class="sec-title">Tiến hành làm mô hình</h2>
+                <span class="sec-sub">BUILD_STEPS // 05 STAGES</span>
             </div>
 
             <div class="timeline">
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <span class="timeline-step">Bước 01</span>
-                    <h4>Làm nền và dựng khung nhà</h4>
-                    <p>Đo cắt bìa carton và ghép các thanh que gỗ tạo hệ khung xương, 4 cột trụ chịu lực cân đối.</p>
+                    <h4>Làm nền và dựng khung trụ nhà</h4>
+                    <p>Đo cắt bìa carton và ghép các thanh que gỗ tạo khung sàn cùng 4 cột trụ chịu lực cân đối.</p>
                 </div>
 
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <span class="timeline-step">Bước 02</span>
-                    <h4>Lắp sàn, tường, mái và cầu thang</h4>
-                    <p>Dựng buồng nhà bằng bìa carton, lợp mái dốc bằng que gỗ xếp khít nhau, đóng lan can hành lang và lắp cầu thang.</p>
+                    <h4>Làm sàn, tường, mái và cầu thang</h4>
+                    <p>Dựng thân nhà bằng bìa carton, lợp mái dốc bằng que gỗ xếp khít nhau, đóng lan can hành lang và gắn cầu thang.</p>
                 </div>
 
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <span class="timeline-step">Bước 03</span>
-                    <h4>Tích hợp giải pháp chống lũ</h4>
-                    <p>Gắn cố định các phao nổi bằng chai nhựa tái chế vào phía dưới chân cột nhà sàn bằng keo nến chắc chắn.</p>
+                    <h4>Thêm các giải pháp chống lũ</h4>
+                    <p>Gắn cố định hệ thống phao nổi bằng chai nhựa tái chế vào phía dưới chân cột nhà sàn bằng keo nến.</p>
                 </div>
 
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <span class="timeline-step">Bước 04</span>
-                    <h4>Trang trí cảnh quan và chi tiết</h4>
-                    <p>Viền khung cửa sổ, hoàn thiện bề mặt tường, kiểm tra các mối nối lan can và bậc thang.</p>
+                    <h4>Trang trí và hoàn thiện chi tiết</h4>
+                    <p>Tạo khung cửa sổ đối diện nhà, kiểm tra độ cứng cáp của hành lang và các bậc cầu thang.</p>
                 </div>
 
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <span class="timeline-step">Bước 05</span>
-                    <h4>Hoàn thiện và kiểm tra sản phẩm</h4>
-                    <p>Thử nghiệm độ cân bằng của chân đế phao chai nhựa và hoàn chỉnh nội dung tuyên truyền phòng chống lũ.</p>
+                    <h4>Kiểm tra độ cân bằng & Hoàn thiện</h4>
+                    <p>Rà soát toàn bộ mối ghép keo nến, kiểm tra độ thăng bằng của đế phao chai nhựa và hoàn chỉnh sản phẩm.</p>
                 </div>
             </div>
         </section>
 
-        <!-- MỤC 5: THÔNG ĐIỆP SẢN PHẨM -->
-        <div id="thong-diep" class="quote-banner">
+        <!-- THÔNG ĐIỆP SẢN PHẨM -->
+        <div class="quote-banner">
             <span>Thông điệp sản phẩm</span>
             <p>“Chủ động phòng tránh lũ lụt – Bảo vệ cuộc sống – Cùng xây dựng cộng đồng an toàn hơn!”</p>
         </div>
@@ -780,42 +1002,53 @@
 
     <!-- HỘP PHÓNG TO ẢNH (LIGHTBOX) -->
     <div class="lightbox" id="lightbox" onclick="this.classList.remove('open')">
-        <img id="lightbox-img" src="" alt="Phóng to hình ảnh">
+        <img id="lightbox-img" src="" alt="Phóng to hình ảnh mô hình">
     </div>
 
     <!-- CHÂN TRANG -->
     <footer>
         <div class="container">
-            <p>Dự án học tập Chủ đề STEM 4 • Thực hiện: <strong>Tập thể Lớp 9A6 – Trường THCS Đoàn Thị Điểm</strong></p>
+            <p>Dự án học tập <strong>STEM</strong> • Người thực hiện: <strong>Nguyễn Minh Ái Thiên</strong> – Lớp 9A6 | <strong>Trường THCS Đoàn Thị Điểm</strong></p>
         </div>
     </footer>
 
     <!-- JAVASCRIPT TƯƠNG TÁC -->
     <script>
-        // 1. Dữ liệu mô phỏng 3 trạng thái hoạt động của Ngôi nhà chống lũ
-        const simStates = [
-            {
-                title: "Trạng thái: Ổn định trên nền đất",
-                desc: "Hệ thống 4 trụ gỗ chịu lực giữ sàn sinh hoạt khô ráo, thoáng mát; cầu thang giúp di chuyển lên xuống thuận tiện và hành lang rộng phục vụ sinh hoạt."
-            },
-            {
-                title: "Trạng thái: Thoát nước mưa & Cách ly ngập cục bộ",
-                desc: "Mái nhà lợp que gỗ có độ dốc lớn giúp nước mưa thoát nhanh không gây dột hay đọng tải; độ cao của chân cột nhà sàn giúp mặt sàn hoàn toàn cách ly với dòng nước ngập bên dưới."
-            },
-            {
-                title: "Trạng thái: Kích hoạt lực đẩy phao nổi khi lũ dâng cao",
-                desc: "Khi mực nước dâng cao ngập phần chân trụ, các chai nhựa rỗng đóng kín dưới đáy phát huy lực đẩy Ác-si-mét, kết hợp cùng thân nhà bằng carton nhẹ giúp mô hình giữ thăng bằng và nổi an toàn."
-            }
-        ];
+        // 1. Mô phỏng mực nước và lực đẩy nổi của ngôi nhà
+        function updateWater(val) {
+            const waterLevel = parseInt(val, 10);
+            document.getElementById('waterSlider').value = waterLevel;
+            document.getElementById('waterPercent').textContent = waterLevel + '%';
+            document.getElementById('simWater').style.height = waterLevel + '%';
 
-        function setMode(index, btn) {
-            document.querySelectorAll('.sim-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const out = document.getElementById('sim-output');
-            out.innerHTML = `<strong>${simStates[index].title}</strong>${simStates[index].desc}`;
+            // Khi mực nước vượt qua 32%, phao chai nhựa đẩy ngôi nhà nổi lên theo mực nước
+            const houseBottom = waterLevel > 32 ? (waterLevel * 1.45 - 34) : 12;
+            document.getElementById('simHouse').style.bottom = houseBottom + 'px';
+
+            const statusBox = document.getElementById('simStatus');
+            if (waterLevel < 30) {
+                statusBox.innerHTML = '<strong>Trạng thái: Ổn định trên nền đất</strong>4 cột trụ gỗ giữ sàn sinh hoạt khô ráo, cầu thang lên xuống thuận tiện.';
+            } else if (waterLevel < 55) {
+                statusBox.innerHTML = '<strong>Trạng thái: Cách ly nước ngập nhẹ</strong>Chân cột nhà sàn cao giúp mặt sàn và không gian bên trong hoàn toàn tách biệt với dòng nước bên dưới.';
+            } else {
+                statusBox.innerHTML = '<strong>Trạng thái: Kích hoạt phao nổi chống lũ lớn</strong>Khi nước dâng cao, hệ thống phao chai nhựa kín khí dưới chân cột tạo lực đẩy Ác-si-mét nâng ngôi nhà nổi lên an toàn.';
+            }
         }
 
-        // 2. Tự động bật tính năng Click phóng to ảnh khi bạn đã chèn link vào src=""
+        function setWaterPreset(val, btn) {
+            document.querySelectorAll('.sim-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateWater(val);
+        }
+
+        // 2. Chuyển đổi chế độ Sáng / Bản vẽ Kỹ thuật Tối
+        function toggleTheme() {
+            document.body.classList.toggle('blueprint-mode');
+            const isDark = document.body.classList.contains('blueprint-mode');
+            document.getElementById('themeBtn').textContent = isDark ? '☀️ Chế độ Bản vẽ Sáng' : '🌙 Chế độ Bản vẽ Tối';
+        }
+
+        // 3. Click phóng to ảnh khi đã chèn link vào src=""
         document.querySelectorAll('.product-img').forEach(img => {
             img.addEventListener('click', () => {
                 if (img.getAttribute('src') && img.getAttribute('src').trim() !== '') {
